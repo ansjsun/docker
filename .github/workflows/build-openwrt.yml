@@ -33,7 +33,7 @@ jobs:
     - name: Initialization environment
       env:
         ARCH: x86_64
-        CI_JOB_NAME:x86_64 
+        CI_JOB_NAME: x86_64 
         VERSION: v22.03.3
         DOCKER_IMAGE: ansj
       # run: |
