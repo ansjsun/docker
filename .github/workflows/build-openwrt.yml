@@ -33,15 +33,21 @@ jobs:
     - name: Initialization environment
       env:
         ARCH: x86_64
-        DOCKER_IMAGE: "ansj"
+        CI_JOB_NAME:x86_64 
+        VERSION: v22.03.3
+        DOCKER_IMAGE: ansj
+      # run: |
+      #   sudo -E apt-get -qq update
 
         
     - name: Build and push docker image
       id: push
       run: |
         bash docker-rootfs.sh
-        TARGET=x86_64
+        TARGET=$(echo "$CI_JOB_NAME" | cut -d _ -f 2-)
         VERSION=${VERSION:-snapshot}"
+        TARGET=$(echo "$CI_JOB_NAME" | cut -d _ -f 2-)
+        VERSION="${VERSION:-snapshot}"
         docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
         docker tag "ansj/openwrt-x86:$TARGET-$VERSION-R${{ env.DATE_YMD }}" "$DOCKER_IMAGE:rootfs-$TARGET-$CI_COMMIT_REF_SLUG-$CI_PIPELINE_ID"
         docker push "ansj/openwrt-x86:$TARGET-$VERSION-R${{ env.DATE_YMD }}"
